@@ -12,7 +12,12 @@ export class PipelineStack extends Stack {
         input: pipelines.CodePipelineSource.connection(repoString, "main", {
           connectionArn: `arn:aws:codestar-connections:us-east-1:${this.account}:connection/5c48e23e-e2da-460e-8929-238a5cea87d2`,
         }),
-        commands: ["npm ci", "npm run build", "npx cdk synth"],
+        commands: [
+          "cd infrastructure",
+          "npm ci",
+          "npm run build",
+          "npx cdk synth",
+        ],
       }),
     });
   }
