@@ -1,5 +1,11 @@
 import { pipelines, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
+import { PipelineAppStage } from "./pipeline-app-stage";
+
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
 
 export class PipelineStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
@@ -21,5 +27,11 @@ export class PipelineStack extends Stack {
         ],
       }),
     });
+
+    pipeline.addStage(
+      new PipelineAppStage(this, "Development", {
+        env,
+      })
+    );
   }
 }
