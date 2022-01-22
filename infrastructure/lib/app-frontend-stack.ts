@@ -11,10 +11,6 @@ export class AppFrontendStack extends Stack {
         "https://console.aws.amazon.com/cloudfront/v3/home?region=us-east-1#/distributions",
     });
 
-    new CfnOutput(this, "dummyParam", {
-      value: "pipeline update",
-    });
-
     const cloudFrontFunction = new aws_cloudfront.Function(
       this,
       "CloudFrontFunction",

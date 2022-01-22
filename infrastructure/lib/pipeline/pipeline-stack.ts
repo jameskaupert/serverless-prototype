@@ -29,7 +29,7 @@ export class PipelineStack extends Stack {
     });
 
     pipeline.addStage(
-      new PipelineAppStage(this, "Development", {
+      new PipelineAppStage(this, "Deploy Development Infrastructure", {
         env,
       })
     );
