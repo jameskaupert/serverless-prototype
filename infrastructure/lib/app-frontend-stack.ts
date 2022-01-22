@@ -1,10 +1,15 @@
-import { aws_cloudfront, Stack, StackProps } from "aws-cdk-lib";
+import { aws_cloudfront, CfnOutput, Stack, StackProps } from "aws-cdk-lib";
 import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import { Construct } from "constructs";
 
 export class AppFrontendStack extends Stack {
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
+
+    new CfnOutput(this, "cloudFrontUrl", {
+      value:
+        "https://console.aws.amazon.com/cloudfront/v3/home?region=us-east-1#/distributions",
+    });
 
     const cloudFrontFunction = new aws_cloudfront.Function(
       this,
