@@ -9,7 +9,9 @@ export class PipelineStack extends Stack {
 
     const pipeline = new pipelines.CodePipeline(this, "Pipeline", {
       synth: new pipelines.ShellStep("Synth", {
-        input: pipelines.CodePipelineSource.gitHub(repoString, "main"),
+        input: pipelines.CodePipelineSource.connection(repoString, "main", {
+          connectionArn: `arn:aws:codestar-connections:us-east-1:${this.account}:connection/5c48e23e-e2da-460e-8929-238a5cea87d2`,
+        }),
         commands: ["npm ci", "npm run build", "npx cdk synth"],
       }),
     });
