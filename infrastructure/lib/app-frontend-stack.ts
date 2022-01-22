@@ -12,7 +12,7 @@ export class AppFrontendStack extends Stack {
     });
 
     new CfnOutput(this, "dummyParam", {
-      value: "the pipeline added me automatically on commit",
+      value: "pipeline update",
     });
 
     const cloudFrontFunction = new aws_cloudfront.Function(
