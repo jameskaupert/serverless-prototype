@@ -34,7 +34,7 @@ export class PipelineStack extends Stack {
     });
 
     pipeline.addStage(devStage, {
-      post: [
+      pre: [
         new pipelines.ShellStep("AngularBuild", {
           commands: [
             "echo Building Production App",
@@ -42,9 +42,10 @@ export class PipelineStack extends Stack {
             "npm ci",
             "npm run build",
           ],
-          primaryOutputDirectory: "./dist",
+          primaryOutputDirectory: "dist",
         }),
       ],
+      stackSteps: [],
     });
   }
 }
