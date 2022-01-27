@@ -36,11 +36,8 @@ export class PipelineStack extends Stack {
       pre: [
         new pipelines.ShellStep("DevBuild", {
           commands: [
-            "pwd",
-            "ls",
             "echo Building Production App",
-            "cd web/build",
-            "ls",
+            "cd src/web/build",
             "./deploy.sh",
           ],
         }),
