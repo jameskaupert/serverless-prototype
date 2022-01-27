@@ -12,12 +12,13 @@ export class PipelineStack extends Stack {
     super(scope, id, props);
 
     const repoString = "jameskaupert/serverless-prototype";
+    const source = pipelines.CodePipelineSource.connection(repoString, "main", {
+      connectionArn: `arn:aws:codestar-connections:us-east-1:${this.account}:connection/5c48e23e-e2da-460e-8929-238a5cea87d2`,
+    });
 
     const pipeline = new pipelines.CodePipeline(this, "Pipeline", {
       synth: new pipelines.ShellStep("Synth", {
-        input: pipelines.CodePipelineSource.connection(repoString, "main", {
-          connectionArn: `arn:aws:codestar-connections:us-east-1:${this.account}:connection/5c48e23e-e2da-460e-8929-238a5cea87d2`,
-        }),
+        input: source,
         primaryOutputDirectory: "infrastructure/cdk.out",
         commands: [
           "cd infrastructure",
@@ -33,14 +34,15 @@ export class PipelineStack extends Stack {
     });
 
     pipeline.addStage(devStage, {
-      pre: [
-        new pipelines.ShellStep("DevBuild", {
+      post: [
+        new pipelines.ShellStep("AngularBuild", {
           commands: [
             "echo Building Production App",
             "cd src/web",
             "npm ci",
             "npm run build",
           ],
+          primaryOutputDirectory: "./dist",
         }),
       ],
     });
