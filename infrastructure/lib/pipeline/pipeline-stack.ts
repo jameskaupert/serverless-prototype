@@ -38,7 +38,7 @@ export class PipelineStack extends Stack {
           commands: [
             "pwd",
             "echo Building Production App",
-            "cd ../src/web/build",
+            "cd ./web/build",
             "./deploy.sh",
           ],
         }),
