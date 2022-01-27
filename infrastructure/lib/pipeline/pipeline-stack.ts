@@ -42,7 +42,7 @@ export class PipelineStack extends Stack {
             "npm ci",
             "npm run build",
           ],
-          primaryOutputDirectory: "dist",
+          primaryOutputDirectory: "src/web/dist",
         }),
       ],
       stackSteps: [],
