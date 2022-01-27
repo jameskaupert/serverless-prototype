@@ -28,10 +28,20 @@ export class PipelineStack extends Stack {
       }),
     });
 
-    pipeline.addStage(
-      new PipelineAppStage(this, "Development", {
-        env,
-      })
-    );
+    const devStage = new PipelineAppStage(this, "Development", {
+      env,
+    });
+
+    pipeline.addStage(devStage, {
+      pre: [
+        new pipelines.ShellStep("DevBuild", {
+          commands: [
+            "echo Building Production App",
+            "cd ../../../src/web/build",
+            "./deploy.sh",
+          ],
+        }),
+      ],
+    });
   }
 }
