@@ -39,7 +39,7 @@ export class PipelineStack extends Stack {
             "echo Building Production App",
             "cd src/web",
             "npm ci",
-            "ng build",
+            "npm run build",
           ],
         }),
       ],
