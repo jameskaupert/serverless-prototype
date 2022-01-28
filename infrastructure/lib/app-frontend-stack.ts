@@ -3,6 +3,7 @@ import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import { Construct } from "constructs";
 
 export class AppFrontendStack extends Stack {
+  frontend: CloudFrontToS3;
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
@@ -29,7 +30,7 @@ export class AppFrontendStack extends Stack {
       }
     );
 
-    new CloudFrontToS3(this, "CloudFrontS3", {
+    this.frontend = new CloudFrontToS3(this, "CloudFrontS3", {
       cloudFrontDistributionProps: {
         priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_100,
         defaultBehavior: {
