@@ -33,18 +33,17 @@ export class PipelineStack extends Stack {
       env,
     });
 
-    pipeline.addStage(devStage, {
-      pre: [
-        new pipelines.ShellStep("AngularBuild", {
-          commands: [
-            "echo Building Production App",
-            "cd src/web",
-            "npm ci",
-            "npm run build",
-          ],
-          primaryOutputDirectory: "src/web/dist",
-        }),
+    const appBuildStep = new pipelines.ShellStep("AngularBuild", {
+      commands: [
+        "echo Building Production App",
+        "cd src/web",
+        "npm ci",
+        "npm run build",
       ],
+    });
+
+    pipeline.addStage(devStage, {
+      pre: [appBuildStep],
       post: [
         new pipelines.ShellStep("AngularDeploy", {
           envFromCfnOutputs: {
@@ -52,8 +51,7 @@ export class PipelineStack extends Stack {
             DISTRIBUTION_ID: devStage.distributionId,
           },
           commands: [
-            "pwd",
-            "ls",
+            "cd src/web",
             "echo Deploying App to S3",
             "aws s3 --recursive cp dist s3://$S3_BUCKET_NAME",
             'aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --no-cli-pager',
