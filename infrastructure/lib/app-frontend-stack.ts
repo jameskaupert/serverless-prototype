@@ -7,6 +7,7 @@ import {
 } from "aws-cdk-lib";
 import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import { Construct } from "constructs";
+import { CodeBuildActionType } from "aws-cdk-lib/aws-codepipeline-actions";
 
 export class AppFrontendStack extends Stack {
   frontend: CloudFrontToS3;
@@ -39,6 +40,7 @@ export class AppFrontendStack extends Stack {
     );
 
     this.frontend = new CloudFrontToS3(this, "CloudFrontS3", {
+      bucketProps: {},
       cloudFrontDistributionProps: {
         priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_100,
         defaultBehavior: {
@@ -64,7 +66,7 @@ export class AppFrontendStack extends Stack {
         effect: aws_iam.Effect.ALLOW,
         principals: [new aws_iam.ServicePrincipal("codebuild.amazonaws.com")],
         actions: ["s3:*"],
-        resources: ["*"],
+        resources: [this.frontend.s3Bucket.bucketArn],
       })
     );
 
