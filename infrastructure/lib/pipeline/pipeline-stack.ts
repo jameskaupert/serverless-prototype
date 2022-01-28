@@ -53,7 +53,7 @@ export class PipelineStack extends Stack {
           },
           commands: [
             "echo Deploying App to S3",
-            "aws s3 --recursive cp src/web/dist s3://$S3_BUCKET_NAME",
+            "aws s3 --recursive cp dist s3://$S3_BUCKET_NAME",
             'aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --no-cli-pager',
           ],
         }),
