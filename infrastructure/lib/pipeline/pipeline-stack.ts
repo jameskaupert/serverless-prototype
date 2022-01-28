@@ -50,7 +50,7 @@ export class PipelineStack extends Stack {
         }),
       ],
       post: [
-        new pipelines.ShellStep("AngularBuild", {
+        new pipelines.ShellStep("AngularDeploy", {
           commands: [
             "echo Deploying App to S3",
             `aws s3 --recursive cp src/web/dist s3://${devStage.frontendStack.frontend.s3Bucket.bucketName}`,
