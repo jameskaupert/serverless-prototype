@@ -53,10 +53,12 @@ export class AppFrontendStack extends Stack {
       );
     }
     this.s3BucketName = new CfnOutput(this, "s3BucketName", {
+      exportName: `${this.stackName}-s3BucketName`,
       value: this.frontend.s3Bucket.bucketName,
     });
 
     this.distributionId = new CfnOutput(this, "distributionId", {
+      exportName: `${this.stackName}-distributionId`,
       value: this.frontend.cloudFrontWebDistribution.distributionId,
     });
   }
