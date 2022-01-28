@@ -33,12 +33,12 @@ export class AppFrontendStack extends Stack {
       cloudFrontDistributionProps: {
         priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_100,
         defaultBehavior: {
-          functionAssociations: [
-            {
-              eventType: aws_cloudfront.FunctionEventType.VIEWER_RESPONSE,
-              function: cloudFrontFunction,
-            },
-          ],
+          // functionAssociations: [
+          //   {
+          //     eventType: aws_cloudfront.FunctionEventType.VIEWER_RESPONSE,
+          //     function: cloudFrontFunction,
+          //   },
+          // ],
         },
       },
       originPath: "/web",
