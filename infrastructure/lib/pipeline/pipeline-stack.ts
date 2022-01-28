@@ -33,14 +33,6 @@ export class PipelineStack extends Stack {
       env,
     });
 
-    if (!devStage.frontendStack.frontend.s3Bucket) {
-      throw new Error("Did not receive an S3 bucket from the frontend stack");
-    }
-
-    const s3Bucket = devStage.frontendStack.frontend.s3Bucket;
-    const distributionId =
-      devStage.frontendStack.frontend.cloudFrontWebDistribution.distributionId;
-
     pipeline.addStage(devStage, {
       pre: [
         new pipelines.ShellStep("AngularBuild", {
@@ -57,8 +49,8 @@ export class PipelineStack extends Stack {
         new pipelines.ShellStep("AngularDeploy", {
           commands: [
             "echo Deploying App to S3",
-            `aws s3 --recursive cp src/web/dist s3://${s3Bucket.bucketName}`,
-            `aws cloudfront create-invalidation --distribution-id ${distributionId} --paths "/*" --no-cli-pager`,
+            `aws s3 --recursive cp src/web/dist s3://${devStage.s3BucketName.importValue}`,
+            `aws cloudfront create-invalidation --distribution-id ${devStage.distributionId.importValue} --paths "/*" --no-cli-pager`,
           ],
         }),
       ],

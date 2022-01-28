@@ -4,6 +4,8 @@ import { Construct } from "constructs";
 
 export class AppFrontendStack extends Stack {
   frontend: CloudFrontToS3;
+  s3BucketName: CfnOutput;
+  distributionId: CfnOutput;
   constructor(scope: Construct, id: string, props: StackProps) {
     super(scope, id, props);
 
@@ -43,6 +45,19 @@ export class AppFrontendStack extends Stack {
         },
       },
       originPath: "/web",
+    });
+
+    if (!this.frontend.s3Bucket) {
+      throw new Error(
+        "Did not find a valid s3 bucket to create CfnOutput from"
+      );
+    }
+    this.s3BucketName = new CfnOutput(this, "s3BucketName", {
+      value: this.frontend.s3Bucket.bucketName,
+    });
+
+    this.distributionId = new CfnOutput(this, "distributionId", {
+      value: this.frontend.cloudFrontWebDistribution.distributionId,
     });
   }
 }
