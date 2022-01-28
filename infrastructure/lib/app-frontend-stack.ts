@@ -1,4 +1,10 @@
-import { aws_cloudfront, CfnOutput, Stack, StackProps } from "aws-cdk-lib";
+import {
+  aws_cloudfront,
+  aws_iam,
+  CfnOutput,
+  Stack,
+  StackProps,
+} from "aws-cdk-lib";
 import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import { Construct } from "constructs";
 
@@ -52,6 +58,15 @@ export class AppFrontendStack extends Stack {
         "Did not find a valid s3 bucket to create CfnOutput from"
       );
     }
+
+    this.frontend.s3Bucket.addToResourcePolicy(
+      new aws_iam.PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        principals: [new aws_iam.ServicePrincipal("codebuild.amazonaws.com")],
+        actions: ["s3:PutObject"],
+      })
+    );
+
     this.s3BucketName = new CfnOutput(this, "s3BucketName", {
       exportName: `${this.stackName}-s3BucketName`,
       value: this.frontend.s3Bucket.bucketName,
