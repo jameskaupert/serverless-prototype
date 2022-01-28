@@ -49,8 +49,12 @@ export class PipelineStack extends Stack {
         new pipelines.ShellStep("AngularDeploy", {
           commands: [
             "echo Deploying App to S3",
-            `aws s3 --recursive cp src/web/dist s3://${devStage.s3BucketName.importValue}`,
-            `aws cloudfront create-invalidation --distribution-id ${devStage.distributionId.importValue} --paths "/*" --no-cli-pager`,
+            `aws s3 --recursive cp src/web/dist s3://${
+              devStage.s3BucketName.importValue || "temp-s3BucketName"
+            }`,
+            `aws cloudfront create-invalidation --distribution-id ${
+              devStage.distributionId.importValue || "temp-distributionId"
+            } --paths "/*" --no-cli-pager`,
           ],
         }),
       ],
