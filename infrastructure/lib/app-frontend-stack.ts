@@ -64,6 +64,7 @@ export class AppFrontendStack extends Stack {
         effect: aws_iam.Effect.ALLOW,
         principals: [new aws_iam.ServicePrincipal("codebuild.amazonaws.com")],
         actions: ["s3:PutObject"],
+        resources: ["*"],
       })
     );
 
