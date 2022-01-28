@@ -40,6 +40,7 @@ export class PipelineStack extends Stack {
         "npm ci",
         "npm run build",
       ],
+      primaryOutputDirectory: "./dist",
     });
 
     pipeline.addStage(devStage, {
@@ -50,10 +51,14 @@ export class PipelineStack extends Stack {
             S3_BUCKET_NAME: devStage.s3BucketName,
             DISTRIBUTION_ID: devStage.distributionId,
           },
+          additionalInputs: {
+            dist: appBuildStep,
+          },
           commands: [
-            "cd src/web",
+            "pwd",
+            "ls",
             "echo Deploying App to S3",
-            "aws s3 --recursive cp dist s3://$S3_BUCKET_NAME",
+            "aws s3 --recursive cp ./dist s3://$S3_BUCKET_NAME",
             'aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --no-cli-pager',
           ],
         }),
