@@ -16,14 +16,15 @@ export class PipelineStack extends Stack {
     super(app, id, props);
 
     const sourceOutput = new aws_codepipeline.Artifact();
-    const sourceAction = new aws_codepipeline_actions.GitHubSourceAction({
-      actionName: "GitHubSource",
-      owner: "jameskaupert",
-      repo: "serverless-prototype",
-      oauthToken: SecretValue.secretsManager("github-token"),
-      output: sourceOutput,
-      branch: "main",
-    });
+    const sourceAction =
+      new aws_codepipeline_actions.CodeStarConnectionsSourceAction({
+        actionName: "GitHubSource",
+        owner: "jameskaupert",
+        repo: "serverless-prototype",
+        connectionArn: `arn:aws:codestar-connections:us-east-1:${this.account}:connection/5c48e23e-e2da-460e-8929-238a5cea87d2`,
+        output: sourceOutput,
+        branch: "main",
+      });
 
     const artifactBucket = new aws_s3.Bucket(this, "ArtifactBucket", {
       removalPolicy: RemovalPolicy.DESTROY,
