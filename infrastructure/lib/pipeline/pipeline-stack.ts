@@ -35,10 +35,16 @@ export class PipelineStack extends Stack {
         version: "0.2",
         phases: {
           install: {
-            commands: ["npm i"],
+            commands: ["cd infrastructure", "npm i"],
           },
           build: {
-            commands: ["npm run build", "npm run cdk synth -- o dist"],
+            commands: [
+              "pwd",
+              "ls",
+              "npm run build",
+              "npm run cdk synth -- o dist",
+              "ls",
+            ],
           },
         },
         artifacts: {
