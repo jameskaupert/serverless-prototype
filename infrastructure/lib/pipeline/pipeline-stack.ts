@@ -52,7 +52,6 @@ export class PipelineStack extends Stack {
           },
         },
         artifacts: {
-          "base-directory": "infrastructure",
           files: ["**/*AppFrontendStack.template.json"],
         },
       }),
