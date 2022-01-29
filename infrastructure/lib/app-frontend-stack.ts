@@ -73,7 +73,7 @@ export class AppFrontendStack extends Stack {
           "s3:PutObject*",
           "s3:Abort*",
         ],
-        resources: [this.frontend.s3Bucket.bucketArn],
+        resources: [`${this.frontend.s3Bucket.bucketArn}/*`],
       })
     );
     // .grantReadWrite(
