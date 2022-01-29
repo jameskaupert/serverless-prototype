@@ -35,10 +35,15 @@ export class PipelineStack extends Stack {
         version: "0.2",
         phases: {
           install: {
-            commands: ["cd infrastructure", "npm i"],
+            commands: [
+              "echo Installing Dependencies",
+              "cd infrastructure",
+              "npm i",
+            ],
           },
           build: {
             commands: [
+              "echo Synthesizing CDK into Cloudformation",
               "pwd",
               "ls",
               "npm run build",
