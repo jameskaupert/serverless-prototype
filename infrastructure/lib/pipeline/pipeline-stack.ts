@@ -52,6 +52,9 @@ export class PipelineStack extends Stack {
           files: ["*AppFrontendStack.template.json"],
         },
       }),
+      environment: {
+        buildImage: aws_codebuild.LinuxBuildImage.STANDARD_5_0,
+      },
     });
     const cdkBuildOutput = new aws_codepipeline.Artifact("CdkBuildOutput");
 
