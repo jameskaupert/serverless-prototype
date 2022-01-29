@@ -7,7 +7,6 @@ import {
 } from "aws-cdk-lib";
 import { CloudFrontToS3 } from "@aws-solutions-constructs/aws-cloudfront-s3";
 import { Construct } from "constructs";
-import { CodeBuildActionType } from "aws-cdk-lib/aws-codepipeline-actions";
 
 export class AppFrontendStack extends Stack {
   frontend: CloudFrontToS3;
