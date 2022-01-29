@@ -5,7 +5,6 @@ import {
   aws_codepipeline_actions,
   aws_s3,
   RemovalPolicy,
-  SecretValue,
   Stack,
 } from "aws-cdk-lib";
 
@@ -47,13 +46,13 @@ export class PipelineStack extends Stack {
               "pwd",
               "ls",
               "npm run build",
-              "npm run cdk synth -- o dist",
+              "npm run cdk synth",
               "ls",
             ],
           },
         },
         artifacts: {
-          "base-directory": "dist",
+          "base-directory": "infrastructure.cdk.out",
           files: ["*AppFrontendStack.template.json"],
         },
       }),
