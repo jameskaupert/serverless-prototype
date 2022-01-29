@@ -47,12 +47,12 @@ export class PipelineStack extends Stack {
               "ls",
               "npm run build",
               "npm run cdk synth",
-              "ls",
+              "ls cdk.out",
             ],
           },
         },
         artifacts: {
-          files: ["**/*AppFrontendStack.template.json"],
+          files: ["**/AppFrontendStack.template.json"],
         },
       }),
       environment: {
