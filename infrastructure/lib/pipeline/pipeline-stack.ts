@@ -33,19 +33,6 @@ export class PipelineStack extends Stack {
       env,
     });
 
-    pipeline.pipeline.addToRolePolicy(
-      new aws_iam.PolicyStatement({
-        effect: aws_iam.Effect.ALLOW,
-        actions: [
-          "s3:putObject",
-          "s3:getObject*",
-          "s3:deleteObject*",
-          "s3:list*",
-        ],
-        resources: [`arn:aws:s3:::${devStage.s3BucketName.importValue}/*`],
-      })
-    );
-
     const appBuildStep = new pipelines.ShellStep("AngularBuild", {
       commands: [
         "echo Building Production App",
@@ -77,5 +64,18 @@ export class PipelineStack extends Stack {
         }),
       ],
     });
+
+    pipeline.pipeline.addToRolePolicy(
+      new aws_iam.PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: [
+          "s3:putObject",
+          "s3:getObject*",
+          "s3:deleteObject*",
+          "s3:list*",
+        ],
+        resources: [`arn:aws:s3:::${devStage.s3BucketName.importValue}/*`],
+      })
+    );
   }
 }
