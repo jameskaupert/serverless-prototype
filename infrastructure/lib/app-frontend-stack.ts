@@ -61,19 +61,6 @@ export class AppFrontendStack extends Stack {
       );
     }
 
-    const codeBuildPrincipal = new aws_iam.ServicePrincipal(
-      "codebuild.amazonaws.com"
-    );
-    const codePipelinePrincipal = new aws_iam.ServicePrincipal(
-      "codepipeline.amazonaws.com"
-    );
-    this.frontend.s3Bucket.grantPut(codeBuildPrincipal);
-    this.frontend.s3Bucket.grantRead(codeBuildPrincipal);
-    this.frontend.s3Bucket.grantDelete(codeBuildPrincipal);
-    this.frontend.s3Bucket.grantPut(codePipelinePrincipal);
-    this.frontend.s3Bucket.grantRead(codePipelinePrincipal);
-    this.frontend.s3Bucket.grantDelete(codePipelinePrincipal);
-
     this.s3BucketName = new CfnOutput(this, "s3BucketName", {
       exportName: `${this.stackName}-s3BucketName`,
       value: this.frontend.s3Bucket.bucketName,

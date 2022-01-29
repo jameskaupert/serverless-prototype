@@ -1,4 +1,4 @@
-import { pipelines, Stack, StackProps } from "aws-cdk-lib";
+import { aws_iam, pipelines, Stack, StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { PipelineAppStage } from "./pipeline-app-stage";
 
@@ -32,6 +32,19 @@ export class PipelineStack extends Stack {
     const devStage = new PipelineAppStage(this, "Development", {
       env,
     });
+
+    pipeline.pipeline.addToRolePolicy(
+      new aws_iam.PolicyStatement({
+        effect: aws_iam.Effect.ALLOW,
+        actions: [
+          "s3:putObject",
+          "s3:getObject*",
+          "s3:deleteObject*",
+          "s3:list*",
+        ],
+        resources: [`arn:aws:s3:::${devStage.s3BucketName.importValue}/*`],
+      })
+    );
 
     const appBuildStep = new pipelines.ShellStep("AngularBuild", {
       commands: [
