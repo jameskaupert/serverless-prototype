@@ -61,24 +61,12 @@ export class AppFrontendStack extends Stack {
       );
     }
 
-    this.frontend.s3Bucket.addToResourcePolicy(
-      new aws_iam.PolicyStatement({
-        effect: aws_iam.Effect.ALLOW,
-        principals: [new aws_iam.ServicePrincipal("codebuild.amazonaws.com")],
-        actions: [
-          "s3:GetObject*",
-          "s3:GetBucket*",
-          "s3:List*",
-          "s3:DeleteObject*",
-          "s3:PutObject*",
-          "s3:Abort*",
-        ],
-        resources: [`${this.frontend.s3Bucket.bucketArn}/*`],
-      })
+    const codeBuildPrincipal = new aws_iam.ServicePrincipal(
+      "codebuild.amazonaws.com"
     );
-    // .grantReadWrite(
-    //   new aws_iam.ServicePrincipal("codebuild.amazonaws.com")
-    // );
+    this.frontend.s3Bucket.grantPut(codeBuildPrincipal);
+    this.frontend.s3Bucket.grantRead(codeBuildPrincipal);
+    this.frontend.s3Bucket.grantDelete(codeBuildPrincipal);
 
     this.s3BucketName = new CfnOutput(this, "s3BucketName", {
       exportName: `${this.stackName}-s3BucketName`,
