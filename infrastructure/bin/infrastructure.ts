@@ -2,7 +2,7 @@
 import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { AppFrontendStack } from "../lib/app-frontend-stack";
-import { PipelineStack } from "../lib/pipeline/pipeline-stack";
+import { PipelineStack } from "../lib/reference/cdk-pipelines-stack";
 
 const env = {
   account: process.env.CDK_DEFAULT_ACCOUNT,
