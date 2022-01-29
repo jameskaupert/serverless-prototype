@@ -61,6 +61,43 @@ export class PipelineStack extends Stack {
     });
     const cdkBuildOutput = new aws_codepipeline.Artifact("CdkBuildOutput");
 
+    const frontendBuild = new aws_codebuild.PipelineProject(
+      this,
+      "FrontendBuild",
+      {
+        buildSpec: aws_codebuild.BuildSpec.fromObject({
+          version: "0.2",
+          phases: {
+            install: {
+              commands: [
+                "echo Installing Dependencies",
+                "cd src/web",
+                "npm ci",
+              ],
+            },
+            build: {
+              commands: [
+                "echo Building Frontend App",
+                "pwd",
+                "ls",
+                "npm run build",
+              ],
+            },
+          },
+          artifacts: {
+            "base-directory": "src/web/dist",
+            files: ["**/*"],
+          },
+        }),
+        environment: {
+          buildImage: aws_codebuild.LinuxBuildImage.STANDARD_5_0,
+        },
+      }
+    );
+    const frontendAppBuildOutput = new aws_codepipeline.Artifact(
+      "FrontendAppBuildOutput"
+    );
+
     const pipeline = new aws_codepipeline.Pipeline(this, "Pipeline", {
       artifactBucket: artifactBucket,
       stages: [
@@ -71,6 +108,12 @@ export class PipelineStack extends Stack {
         {
           stageName: "Build",
           actions: [
+            new aws_codepipeline_actions.CodeBuildAction({
+              actionName: "FrontendAppBuild",
+              project: frontendBuild,
+              input: sourceOutput,
+              outputs: [frontendAppBuildOutput],
+            }),
             new aws_codepipeline_actions.CodeBuildAction({
               actionName: "CDKSynth",
               project: cdkBuild,
