@@ -3,6 +3,7 @@ import {
   aws_codebuild,
   aws_codepipeline,
   aws_codepipeline_actions,
+  aws_iam,
   aws_s3,
   CfnOutput,
   RemovalPolicy,
@@ -136,6 +137,15 @@ export class PipelineStack extends Stack {
           },
         },
       }
+    );
+
+    invalidCacheBuild.addToRolePolicy(
+      new aws_iam.PolicyStatement({
+        resources: [
+          `arn:aws:cloudfront::${this.account}:distribution/${this.frontendStack.distributionId}`,
+        ],
+        actions: ["cloudfront:CreateInvalidation"],
+      })
     );
 
     const pipeline = new aws_codepipeline.Pipeline(this, "Pipeline", {
