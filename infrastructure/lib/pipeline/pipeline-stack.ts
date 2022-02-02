@@ -4,6 +4,7 @@ import {
   aws_codepipeline,
   aws_codepipeline_actions,
   aws_s3,
+  CfnOutput,
   RemovalPolicy,
   Stack,
 } from "aws-cdk-lib";
@@ -13,6 +14,11 @@ export interface PipelineStackProps {}
 export class PipelineStack extends Stack {
   constructor(app: App, id: string, props: PipelineStackProps) {
     super(app, id, props);
+
+    new CfnOutput(this, "PipelinesUrl", {
+      value:
+        "https://console.aws.amazon.com/codesuite/codepipeline/pipelines?region=us-east-1",
+    });
 
     const sourceOutput = new aws_codepipeline.Artifact();
     const sourceAction =
@@ -119,6 +125,19 @@ export class PipelineStack extends Stack {
               project: cdkBuild,
               input: sourceOutput,
               outputs: [cdkBuildOutput],
+            }),
+          ],
+        },
+        {
+          stageName: "DeployDev",
+          actions: [
+            new aws_codepipeline_actions.CloudFormationCreateUpdateStackAction({
+              actionName: "DeployFrontend",
+              templatePath: cdkBuildOutput.atPath(
+                "AppFrontendStack.template.json"
+              ),
+              stackName: "FrontendAppStack",
+              adminPermissions: true,
             }),
           ],
         },
