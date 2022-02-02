@@ -139,12 +139,12 @@ export class PipelineStack extends Stack {
       }
     );
 
+    const distributionArn = `arn:aws:cloudfront::${this.account}:distribution/${this.frontendStack.distributionId.importValue}`;
     invalidCacheBuild.addToRolePolicy(
       new aws_iam.PolicyStatement({
-        resources: [
-          `arn:aws:cloudfront::${this.account}:distribution/${this.frontendStack.distributionId}`,
-        ],
+        resources: [distributionArn],
         actions: ["cloudfront:CreateInvalidation"],
+        effect: aws_iam.Effect.ALLOW,
       })
     );
 
