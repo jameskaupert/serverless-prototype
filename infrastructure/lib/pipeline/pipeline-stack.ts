@@ -7,13 +7,20 @@ import {
   CfnOutput,
   RemovalPolicy,
   Stack,
+  StackProps,
 } from "aws-cdk-lib";
+import { AppFrontendStack } from "../app-frontend-stack";
 
-export interface PipelineStackProps {}
+export interface PipelineStackProps extends StackProps {
+  frontendStack: AppFrontendStack;
+}
 
 export class PipelineStack extends Stack {
+  frontendStack: AppFrontendStack;
   constructor(app: App, id: string, props: PipelineStackProps) {
-    super(app, id, props);
+    super(app, id);
+
+    this.frontendStack = props.frontendStack;
 
     new CfnOutput(this, "PipelinesUrl", {
       value:
@@ -133,10 +140,19 @@ export class PipelineStack extends Stack {
           stageName: "DeployDev",
           actions: [
             new aws_codepipeline_actions.CloudFormationCreateUpdateStackAction({
-              actionName: "DeployFrontend",
+              actionName: "DeployFrontendInfrastructure",
               templatePath: cdkBuildOutput.atPath("Frontend.template.json"),
               stackName: "FrontendAppStack",
               adminPermissions: true,
+            }),
+            new aws_codepipeline_actions.S3DeployAction({
+              actionName: "DeployFrontendAppCode",
+              bucket: aws_s3.Bucket.fromBucketName(
+                this,
+                "bucketName",
+                this.frontendStack.s3BucketName.importValue
+              ),
+              input: frontendAppBuildOutput,
             }),
           ],
         },
