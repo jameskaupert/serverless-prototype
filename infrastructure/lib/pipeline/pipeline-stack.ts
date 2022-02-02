@@ -58,7 +58,7 @@ export class PipelineStack extends Stack {
           },
         },
         artifacts: {
-          files: ["**/AppFrontendStack.template.json"],
+          files: ["**/Frontend.template.json"],
         },
       }),
       environment: {
@@ -133,9 +133,7 @@ export class PipelineStack extends Stack {
           actions: [
             new aws_codepipeline_actions.CloudFormationCreateUpdateStackAction({
               actionName: "DeployFrontend",
-              templatePath: cdkBuildOutput.atPath(
-                "AppFrontendStack.template.json"
-              ),
+              templatePath: cdkBuildOutput.atPath("Frontend.template.json"),
               stackName: "FrontendAppStack",
               adminPermissions: true,
             }),
