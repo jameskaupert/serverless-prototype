@@ -112,6 +112,32 @@ export class PipelineStack extends Stack {
       "FrontendAppBuildOutput"
     );
 
+    const invalidCacheBuild = new aws_codebuild.PipelineProject(
+      this,
+      "InvalidateCacheBuild",
+      {
+        buildSpec: aws_codebuild.BuildSpec.fromObject({
+          version: "0.2",
+          phases: {
+            build: {
+              commands: [
+                "echo Invalidating Cache",
+                'aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*" --no-cli-pager',
+              ],
+            },
+          },
+        }),
+        environment: {
+          buildImage: aws_codebuild.LinuxBuildImage.STANDARD_5_0,
+        },
+        environmentVariables: {
+          DISTRIBUTION_ID: {
+            value: this.frontendStack.distributionId.importValue,
+          },
+        },
+      }
+    );
+
     const pipeline = new aws_codepipeline.Pipeline(this, "Pipeline", {
       artifactBucket: artifactBucket,
       stages: [
@@ -153,6 +179,13 @@ export class PipelineStack extends Stack {
                 this.frontendStack.s3BucketName.importValue
               ),
               input: frontendAppBuildOutput,
+              runOrder: 2,
+            }),
+            new aws_codepipeline_actions.CodeBuildAction({
+              actionName: "InvalidateCache",
+              input: frontendAppBuildOutput,
+              project: invalidCacheBuild,
+              runOrder: 3,
             }),
           ],
         },
