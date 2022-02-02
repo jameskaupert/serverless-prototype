@@ -40,6 +40,7 @@ export class AppFrontendStack extends Stack {
 
     this.frontend = new CloudFrontToS3(this, "CloudFrontS3", {
       bucketProps: {},
+      insertHttpSecurityHeaders: false,
       cloudFrontDistributionProps: {
         priceClass: aws_cloudfront.PriceClass.PRICE_CLASS_100,
         defaultBehavior: {
