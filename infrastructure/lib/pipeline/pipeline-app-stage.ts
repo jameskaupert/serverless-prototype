@@ -1,6 +1,6 @@
 import { CfnOutput, Stage, StageProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
-import { AppFrontendStack } from "../app-frontend-stack";
+import { AppFrontendStack } from "../stacks/app-frontend-stack";
 
 export class PipelineAppStage extends Stage {
   frontendStack: AppFrontendStack;

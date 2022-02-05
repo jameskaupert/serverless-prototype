@@ -10,7 +10,7 @@ import {
   Stack,
   StackProps,
 } from "aws-cdk-lib";
-import { AppFrontendStack } from "../app-frontend-stack";
+import { AppFrontendStack } from "../stacks/app-frontend-stack";
 
 export interface PipelineStackProps extends StackProps {
   frontendStack: AppFrontendStack;
